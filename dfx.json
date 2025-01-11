@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "magreste_labs_backend": {
+      "main": "src/magreste_labs_backend/main.mo",
+      "type": "motoko"
+    },
+    "magreste_labs_frontend": {
+      "dependencies": [
+        "magreste_labs_backend"
+      ],
+      "source": [
+        "src/magreste_labs_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "magreste_labs_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
