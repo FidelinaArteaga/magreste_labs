@@ -1,0 +1,63 @@
+//src/marketplace_canister/main.mo 
+import Debug "mo:base/Debug";
+import Principal "mo:base/Principal";
+import Nat "mo:base/Time";
+import NFT "mo:your_nft_canister_id" ; //reemplaza con el ID de tu canister de NFT
+
+
+
+
+actor MarketplaceNFT {
+   type NFT = {
+        id: Nat;
+        owner:Principal;
+        metaData:Text;
+
+   };
+
+     stable var nfts: [NFT] = [];
+     stable var nextId: Nat = 0;
+
+     public func buyNFT(nftId: Nat) :  Text {
+        let listingOpt = Array.find <Listing>(fun (listing){ listing.nftId == nftId},listings);
+        switch (listingOpt) {
+            case (null) {return "NFT not found";}
+            case (listing) {
+                if (msg.caller == listing.seller) {
+                    return "Seller cannot buy their own NFT";
+                } 
+            }
+     }
+
+     public func createNFT (metadata: Text) : Nat {
+         let newNft = NFT { id = nextId,owner = msg.caller, metadata = metadata};
+         nft := nfts # [newNft];
+         nextId:= nextId + 1;
+         return newNft.id;
+
+     }
+
+     public func getNFTs (): [NFT]{
+        return nfts;
+     }
+
+     public func transferNFT (nftId: Nat, newOwener; Principal) : Text {
+            switch (Array.find <NFT> (fun(nft) {nft.id == nftId},nfts)){
+                case (null) { return "NFT not found";}
+                case (null) {
+                    return " You do not own this NFT";
+                };
+
+                case (nft) {
+                    if (nft.owner != msg.caller){
+                        return " You do not own this NFT"
+                    }
+                let updatedNft = NFT {id = nft.id, owner = newOwer, metadata = nft.metadata};
+                nfts := Array.replace<NFT>(nft.id, updateNft, nft);
+                return "trasfer successful";
+
+         };
+    };
+}
+
+}
